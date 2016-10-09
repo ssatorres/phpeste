@@ -15,4 +15,32 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
     return $response;
 });
 
+$app->post('/files/{content}', function (Request $request, Response $response) {
+    $content = $request->getAttribute('content');
+    $response->getBody()->write("Arquivo feito com sucesso!");
+
+	try {
+	    $s3 = new S3Client([
+		    'version' => 'latest',
+		    'region'  => 'sa-east-1',
+		    'credentials' => [
+		        'key'    => 'AKIAJJCENL6ALHXTUQPQ',
+		        'secret' => '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'
+		    ]
+		]);
+
+	    $s3->putObject([
+	        'Bucket' => 'phpeste2016',
+	        'Key'    => rand() . '.txt',
+	        'Body'   => $content,
+	        'ACL'    => 'public-read',
+	    ]);
+	} catch (Aws\Exception\S3Exception $e) {
+	    echo "There was an error uploading the file.\n";
+	}
+
+    return $response;
+});
+
+
 $app->run();
