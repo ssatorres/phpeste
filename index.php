@@ -2,6 +2,7 @@
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Aws\S3\S3Client;
 
 require 'vendor/autoload.php';
 
@@ -41,6 +42,5 @@ $app->post('/files/{content}', function (Request $request, Response $response) {
 
     return $response;
 });
-
 
 $app->run();
